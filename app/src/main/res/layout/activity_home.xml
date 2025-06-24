@@ -6,61 +6,231 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".HomeActivity">
+    <ImageView
+        android:id="@+id/imgBackground"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bgg_home"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_header"
+        android:padding="6dp"
+        android:layout_margin="16dp"
+        android:elevation="4dp"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- Avatar + tên -->
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-            <!-- Tiêu đề ở giữa: "Xin chào!" -->
-            <TextView
-                android:id="@+id/tvWelcome"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Xin chào!"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:padding="16dp"
-                android:textColor="#87CEEB"
-                android:fontFamily="serif" />
-
-            <!-- Ô tìm kiếm -->
-            <EditText
-                android:id="@+id/etSearch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Bạn đang tìm sách gì..."
-                android:padding="12dp"
-                android:background="@android:drawable/edit_text"
-                android:drawableLeft="@android:drawable/ic_menu_search"
-                android:layout_marginBottom="16dp" />
-
-            <!-- Hình ảnh shop bán sách -->
             <ImageView
-                android:id="@+id/imgShop"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:src="@drawable/slider"
-            android:scaleType="centerCrop"
-            android:layout_marginBottom="16dp" />
+                android:id="@+id/avatar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ava"
+                android:scaleType="centerCrop"
+                android:background="@drawable/bg_round_white"
+                android:clipToOutline="true"
+                android:outlineProvider="background"
+                android:layout_marginEnd="8dp" />
 
-            <!-- Danh sách danh mục -->
             <TextView
+                android:id="@+id/tvGreeting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Danh mục:"
+                android:text="Hi, Kieu!"
                 android:textSize="18sp"
-                android:textColor="#87CEEB"
-                android:fontFamily="serif"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
-            <ListView
-                android:id="@+id/list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-            </LinearLayout>
+                android:textColor="#7389A1"
+                android:fontFamily="sans-serif-medium" />
+        </LinearLayout>
 
+
+    </LinearLayout>
+
+
+
+
+    <!-- Ô tìm kiếm -->
+    <LinearLayout
+        android:id="@+id/searchBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_search_input"
+    android:padding="4dp"
+    app:layout_constraintTop_toBottomOf="@id/header"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent">
+
+    <!-- Phần nhập: 8 phần -->
+    <EditText
+        android:id="@+id/etSearch"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="8"
+        android:background="@drawable/bg_search_field"
+    android:hint="Bạn đang tìm sách gì..."
+    android:padding="6dp"
+    android:textColor="#000000"
+    android:textColorHint="#4D4D4D"
+    android:inputType="text"
+    android:drawableLeft="@android:drawable/ic_menu_search"
+    android:drawablePadding="8dp" />
+
+    <!-- Nút tìm kiếm: 2 phần -->
+    <ImageView
+        android:id="@+id/btnSearch"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:padding="8dp"
+        android:src="@android:drawable/ic_menu_search"
+        android:background="@drawable/bg_search_button"
+        android:scaleType="centerInside"
+        android:contentDescription="Tìm kiếm"
+        android:clickable="true"
+        android:focusable="true"/>
+</LinearLayout>
+
+
+    <!-- Hình ảnh slider shop -->
+    <ImageView
+        android:id="@+id/imgShop"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:src="@drawable/slider_1"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toBottomOf="@id/searchBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp" />
+
+
+    <!-- Tiêu đề Danh mục + Xem tất cả -->
+    <LinearLayout
+        android:id="@+id/categoryTitleLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/imgShop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tvCategoryTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Danh mục:"
+            android:textSize="18sp"
+            android:textColor="#87CEEB"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/btnViewAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Xem tất cả"
+            android:textColor="#001243"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            />
+    </LinearLayout>
+
+    <!-- Danh mục ngang -->
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="8dp"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        app:layout_constraintTop_toBottomOf="@id/categoryTitleLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:id="@+id/layoutCategoryRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp" />
+    </HorizontalScrollView>
+
+    <!-- Tiêu đề "Sản phẩm:" -->
+    <TextView
+        android:id="@+id/tvCategoryTitle_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sản phẩm:"
+        android:textSize="18sp"
+        android:textColor="#87CEEB"
+        android:fontFamily="serif"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/horizontalScrollView"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp" />
+
+
+    <!-- Danh sách sản phẩm -->
+
+
+    <HorizontalScrollView
+        android:id="@+id/horizontalProductScroll"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        app:layout_constraintTop_toBottomOf="@id/tvCategoryTitle_1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:id="@+id/layoutProductRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp" />
+    </HorizontalScrollView>
+
+
+
+<!--    <ListView-->
+<!--        android:id="@+id/list_1"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/tvCategoryTitle_1"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        android:layout_margin="16dp" />-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
