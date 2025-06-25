@@ -6,6 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".HomeActivity">
+
+
     <ImageView
         android:id="@+id/imgBackground"
         android:layout_width="0dp"
@@ -30,7 +32,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Avatar + tên -->
+        <!-- PHẦN TRÁI: Avatar + tên -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -59,8 +61,21 @@
                 android:fontFamily="sans-serif-medium" />
         </LinearLayout>
 
-
+        <!-- PHẦN PHẢI: Nút giỏ hàng -->
+        <ImageView
+            android:id="@+id/btnCart"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/add_cart"
+            android:scaleType="centerCrop"
+            android:background="@drawable/bg_round_white"
+            android:clipToOutline="true"
+            android:outlineProvider="background"
+            android:contentDescription="Giỏ hàng"
+            android:elevation="6dp"
+            android:layout_gravity="center_vertical" />
     </LinearLayout>
+
 
 
 
@@ -91,7 +106,6 @@
     android:textColor="#000000"
     android:textColorHint="#4D4D4D"
     android:inputType="text"
-    android:drawableLeft="@android:drawable/ic_menu_search"
     android:drawablePadding="8dp" />
 
     <!-- Nút tìm kiếm: 2 phần -->
@@ -199,30 +213,21 @@
     <!-- Danh sách sản phẩm -->
 
 
-    <HorizontalScrollView
-        android:id="@+id/horizontalProductScroll"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerProduct"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
-        android:overScrollMode="never"
-        android:scrollbars="none"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:padding="4dp"
         app:layout_constraintTop_toBottomOf="@id/tvCategoryTitle_1"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <LinearLayout
-            android:id="@+id/layoutProductRow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp" />
-    </HorizontalScrollView>
+        app:layout_constraintEnd_toEndOf="parent"
+        />
 
 
 
-<!--    <ListView-->
+    <!--    <ListView-->
 <!--        android:id="@+id/list_1"-->
 <!--        android:layout_width="0dp"-->
 <!--        android:layout_height="0dp"-->
