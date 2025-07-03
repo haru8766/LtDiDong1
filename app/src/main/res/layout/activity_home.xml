@@ -84,12 +84,14 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:src="@drawable/add_cart"
-                    android:scaleType="centerCrop"
+                    android:scaleType="centerInside"
                     android:background="@drawable/bg_round_white"
-                    android:clipToOutline="true"
-                    android:outlineProvider="background"
-                    android:contentDescription="Giỏ hàng"
-                    android:elevation="6dp" />
+                android:clipToOutline="true"
+                android:outlineProvider="background"
+                android:contentDescription="Giỏ hàng"
+                android:padding="8dp"
+                android:elevation="6dp" />
+
             </LinearLayout>
 
             <!-- Search -->
