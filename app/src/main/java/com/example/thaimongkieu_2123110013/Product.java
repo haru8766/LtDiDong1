@@ -1,33 +1,24 @@
 package com.example.thaimongkieu_2123110013;
 
-//    public class Product {
-//        public int imageResId;
-//        public String name;
-//        public String oldPrice;
-//        public String newPrice;
-//        public String description;
-//
-//        public Product(int imageResId, String name, String oldPrice, String newPrice, String description) {
-//            this.imageResId = imageResId;
-//            this.name = name;
-//            this.oldPrice = oldPrice;
-//            this.newPrice = newPrice;
-//            this.description = description;
-//        }
-//    }
-
 import java.io.Serializable;
 
 public class Product implements Serializable {
-    public int imageResId;
-    public String name, oldPrice, newPrice, description;
+    private String id;
+    private String imageUrl;
+    private String name;
+    private String author;
+    private String category;
+    private double originalPrice;
+    private double discountPrice;
+    private String description;
 
-    public Product(int imageResId, String name, String oldPrice, String newPrice, String description) {
-        this.imageResId = imageResId;
-        this.name = name;
-        this.oldPrice = oldPrice;
-        this.newPrice = newPrice;
-        this.description = description;
-    }
+    // Getter - Retrofit cần có các getter để ánh xạ JSON
+    public String getId() { return id; }
+    public String getImageUrl() { return imageUrl; }
+    public String getName() { return name; }
+    public String getAuthor() { return author; }
+    public String getCategory() { return category; }
+    public double getOriginalPrice() { return originalPrice; }
+    public double getDiscountPrice() { return discountPrice; }
+    public String getDescription() { return description; }
 }
-

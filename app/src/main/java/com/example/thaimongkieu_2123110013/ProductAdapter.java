@@ -13,6 +13,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
@@ -35,26 +37,28 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder h, int position) {
         Product p = list.get(position);
-        h.img.setImageResource(p.imageResId);
-        h.name.setText(p.name);
-        h.oldPrice.setText(p.oldPrice);
-        h.newPrice.setText(p.newPrice);
-        h.description.setText(p.description);
+
+        // 👉 Load ảnh từ URL bằng Glide
+        Glide.with(context)
+                .load(p.getImageUrl())
+                .into(h.img);
+
+        h.name.setText(p.getName());
+        h.oldPrice.setText(String.format("Giá gốc: %.0f đ", p.getOriginalPrice()));
+        h.newPrice.setText(String.format("Giá giảm: %.0f đ", p.getDiscountPrice()));
+        h.description.setText(p.getDescription());
 
         h.btnView.setOnClickListener(v -> {
             Intent intent = new Intent(context, DetailActivity.class);
-            intent.putExtra("name", p.name);
-            intent.putExtra("img", p.imageResId);
-            intent.putExtra("oldPrice", p.oldPrice);
-            intent.putExtra("newPrice", p.newPrice);
-            intent.putExtra("description", p.description);
+            intent.putExtra("product", p); // truyền nguyên đối tượng
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         });
 
-        h.btnCart.setOnClickListener(v ->
-                Toast.makeText(context, "Đã thêm: " + p.name, Toast.LENGTH_SHORT).show()
-        );
+
+        h.btnCart.setOnClickListener(v -> {
+            Toast.makeText(context, "Đã thêm: " + p.getName(), Toast.LENGTH_SHORT).show();
+        });
     }
 
     @Override
@@ -79,4 +83,3 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         }
     }
 }
-

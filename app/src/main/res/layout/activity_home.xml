@@ -38,6 +38,7 @@
             android:orientation="vertical">
 
             <!-- Header -->
+            <!-- Header -->
             <LinearLayout
                 android:id="@+id/header"
                 android:layout_width="match_parent"
@@ -49,7 +50,7 @@
                 android:elevation="4dp"
                 android:gravity="center_vertical">
 
-                <!-- Avatar + Tên -->
+                <!-- Bên trái: Avatar + Greeting -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -61,7 +62,7 @@
                         android:id="@+id/avatar"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:src="@drawable/ava"
+                        android:src="@drawable/avatar"
                         android:scaleType="centerCrop"
                         android:background="@drawable/bg_round_white"
                         android:clipToOutline="true"
@@ -72,13 +73,13 @@
                         android:id="@+id/tvGreeting"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Hi, Kieu!"
+                        android:text="Hi!"
                         android:textSize="18sp"
                         android:textColor="#7389A1"
                         android:fontFamily="sans-serif-medium" />
                 </LinearLayout>
 
-                <!-- Nút giỏ hàng -->
+                <!-- Bên phải: Nút giỏ hàng -->
                 <ImageView
                     android:id="@+id/btnCart"
                     android:layout_width="40dp"
@@ -86,13 +87,13 @@
                     android:src="@drawable/add_cart"
                     android:scaleType="centerInside"
                     android:background="@drawable/bg_round_white"
-                android:clipToOutline="true"
-                android:outlineProvider="background"
-                android:contentDescription="Giỏ hàng"
-                android:padding="8dp"
-                android:elevation="6dp" />
-
+                    android:clipToOutline="true"
+                    android:outlineProvider="background"
+                    android:contentDescription="Giỏ hàng"
+                    android:padding="8dp"
+                    android:elevation="6dp" />
             </LinearLayout>
+
 
             <!-- Search -->
             <LinearLayout
@@ -160,14 +161,7 @@
                     android:textColor="#87CEEB"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/btnViewAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Xem tất cả"
-                    android:textColor="#001243"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+
             </LinearLayout>
 
             <!-- Danh mục ngang -->

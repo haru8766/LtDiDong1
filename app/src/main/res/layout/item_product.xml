@@ -39,28 +39,28 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_marginTop="4dp">
 
             <TextView
                 android:id="@+id/tvPriceNew"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="350.000đ"
+                android:text="25000đ"
                 android:textColor="#E91E63"
                 android:textStyle="bold"
-                android:textSize="14sp" />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/tvPriceOld"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="500.000đ"
+                android:text="30000đ"
                 android:textColor="#888888"
                 android:textSize="13sp"
-                android:layout_marginStart="16dp"
-                />
+                 />
         </LinearLayout>
+
 
         <!-- Mô tả -->
         <TextView
@@ -70,7 +70,10 @@
             android:text="Mô tả ngắn sản phẩm"
             android:textSize="13sp"
             android:textColor="#444444"
-            android:layout_marginTop="4dp" />
+            android:layout_marginTop="4dp"
+            android:maxLines="1"
+            android:ellipsize="end" />
+
 
         <!-- Nút Xem chi tiết và Thêm vào giỏ -->
         <LinearLayout

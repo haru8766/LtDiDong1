@@ -46,25 +46,25 @@ public class CartActivity extends AppCompatActivity {
         RecyclerView recyclerCart = findViewById(R.id.recyclerCart);
         TextView tvTotal = findViewById(R.id.tvTotal);
 
-        List<Product> list = new ArrayList<>();
-        list.add(new Product(R.drawable.p2, "Thái tử song sinh", "300.000đ", "250.000đ", "văn học phương tây"));
-        list.add(new Product(R.drawable.p1, "Truyền kỳ mạn lục", "400.000đ", "300.000đ", "Cổ trang"));
+//        List<Product> list = new ArrayList<>();
+//        list.add(new Product(R.drawable.p2, "Thái tử song sinh", "300.000đ", "250.000đ", "văn học phương tây"));
+//        list.add(new Product(R.drawable.p1, "Truyền kỳ mạn lục", "400.000đ", "300.000đ", "Cổ trang"));
 
-        CartAdapter adapter = new CartAdapter(list);
-        recyclerCart.setLayoutManager(new LinearLayoutManager(this));
-        recyclerCart.setAdapter(adapter);
-
-// Gắn listener để cập nhật tổng giá
-        adapter.setOnItemCheckedChangeListener(total -> {
-            tvTotal.setText("Tổng: " + total + "đ");
-        });
-
-        Button btnCheckout = findViewById(R.id.btnCheckout);
-
-        btnCheckout.setOnClickListener(v -> {
-            Intent intent = new Intent(CartActivity.this, CheckoutActivity.class);
-            startActivity(intent);
-        });
+//        CartAdapter adapter = new CartAdapter(list);
+//        recyclerCart.setLayoutManager(new LinearLayoutManager(this));
+//        recyclerCart.setAdapter(adapter);
+//
+//// Gắn listener để cập nhật tổng giá
+//        adapter.setOnItemCheckedChangeListener(total -> {
+//            tvTotal.setText("Tổng: " + total + "đ");
+//        });
+//
+//        Button btnCheckout = findViewById(R.id.btnCheckout);
+//
+//        btnCheckout.setOnClickListener(v -> {
+//            Intent intent = new Intent(CartActivity.this, CheckoutActivity.class);
+//            startActivity(intent);
+//        });
 
 
 
