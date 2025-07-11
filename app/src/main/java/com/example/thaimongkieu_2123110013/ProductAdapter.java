@@ -19,12 +19,18 @@ import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
 
+    public interface OnCartClickListener {
+        void onAddToCartClicked(Product product);
+    }
+
     private final Context context;
     private final List<Product> list;
+    private final OnCartClickListener cartClickListener;
 
-    public ProductAdapter(Context context, List<Product> list) {
+    public ProductAdapter(Context context, List<Product> list, OnCartClickListener cartClickListener) {
         this.context = context;
         this.list = list;
+        this.cartClickListener = cartClickListener;
     }
 
     @NonNull
@@ -38,7 +44,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     public void onBindViewHolder(@NonNull ProductViewHolder h, int position) {
         Product p = list.get(position);
 
-        // 👉 Load ảnh từ URL bằng Glide
         Glide.with(context)
                 .load(p.getImageUrl())
                 .into(h.img);
@@ -50,15 +55,16 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
         h.btnView.setOnClickListener(v -> {
             Intent intent = new Intent(context, DetailActivity.class);
-            intent.putExtra("product", p); // truyền nguyên đối tượng
+            intent.putExtra("product", p);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         });
 
-
         h.btnCart.setOnClickListener(v -> {
+            CartManager.addProduct(p); // Thêm sản phẩm vào giỏ hàng
             Toast.makeText(context, "Đã thêm: " + p.getName(), Toast.LENGTH_SHORT).show();
         });
+
     }
 
     @Override

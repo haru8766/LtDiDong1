@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,8 +16,10 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class CartActivity extends AppCompatActivity {
 
@@ -25,49 +28,84 @@ public class CartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_cart);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // Gán nút back
         ImageButton btnBack = findViewById(R.id.btnBack1);
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Quay lại màn hình chính (có thể là MainActivity hoặc HomeActivity thay vì LoginActivity)
-                Intent it = new Intent(getApplicationContext(), HomeActivity.class);
-                startActivity(it);
-                finish();
-            }
+        btnBack.setOnClickListener(v -> {
+            startActivity(new Intent(CartActivity.this, HomeActivity.class));
+            finish();
         });
 
         RecyclerView recyclerCart = findViewById(R.id.recyclerCart);
+        TextView tvEmptyCart = findViewById(R.id.tvEmptyCart); // THÊM DÒNG NÀY
         TextView tvTotal = findViewById(R.id.tvTotal);
+        Button btnCheckout = findViewById(R.id.btnCheckout);
 
-//        List<Product> list = new ArrayList<>();
-//        list.add(new Product(R.drawable.p2, "Thái tử song sinh", "300.000đ", "250.000đ", "văn học phương tây"));
-//        list.add(new Product(R.drawable.p1, "Truyền kỳ mạn lục", "400.000đ", "300.000đ", "Cổ trang"));
+        List<Product> cartList = CartManager.getCart();
 
-//        CartAdapter adapter = new CartAdapter(list);
-//        recyclerCart.setLayoutManager(new LinearLayoutManager(this));
-//        recyclerCart.setAdapter(adapter);
-//
-//// Gắn listener để cập nhật tổng giá
-//        adapter.setOnItemCheckedChangeListener(total -> {
-//            tvTotal.setText("Tổng: " + total + "đ");
-//        });
-//
-//        Button btnCheckout = findViewById(R.id.btnCheckout);
-//
-//        btnCheckout.setOnClickListener(v -> {
-//            Intent intent = new Intent(CartActivity.this, CheckoutActivity.class);
-//            startActivity(intent);
-//        });
+        // Kiểm tra nếu giỏ hàng trống
+        if (cartList == null || cartList.isEmpty()) {
+            recyclerCart.setVisibility(View.GONE);
+            tvEmptyCart.setVisibility(View.VISIBLE);
+            btnCheckout.setEnabled(false); // không cho thanh toán
+            tvTotal.setText("Tổng: 0đ");
+            return;
+        } else {
+            recyclerCart.setVisibility(View.VISIBLE);
+            tvEmptyCart.setVisibility(View.GONE);
+            btnCheckout.setEnabled(true);
+        }
 
+        CartAdapter adapter = new CartAdapter(cartList);
+        adapter.setOnCartChangedListener(new CartAdapter.OnCartChangedListener() {
+            @Override
+            public void onCartUpdated(double total) {
+                tvTotal.setText("Tổng: " + formatCurrency(total));
+            }
 
+            @Override
+            public void onItemRemoved(Product removedItem) {
+                CartManager.removeProduct(removedItem);
+            }
+        });
 
+        recyclerCart.setLayoutManager(new LinearLayoutManager(this));
+        recyclerCart.setAdapter(adapter);
 
+        // Tổng tiền ban đầu (nếu cần tính từ các sản phẩm được chọn)
+        double initialTotal = 0;
+        for (Product p : cartList) {
+            if (p.isSelected()) {
+                initialTotal += p.getDiscountPrice() * p.getQuantity();
+            }
+        }
+        tvTotal.setText("Tổng: " + formatCurrency(initialTotal));
+
+        btnCheckout.setOnClickListener(v -> {
+            ArrayList<Product> selectedItems = new ArrayList<>();
+            for (Product p : cartList) {
+                if (p.isSelected()) {
+                    selectedItems.add(p);
+                }
+            }
+
+            if (selectedItems.isEmpty()) {
+                Toast.makeText(this, "Vui lòng chọn ít nhất 1 sản phẩm", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Intent intent = new Intent(CartActivity.this, CheckoutActivity.class);
+            intent.putExtra("selected_products", selectedItems);
+            startActivity(intent);
+        });
+    }
+
+    private String formatCurrency(double amount) {
+        return NumberFormat.getCurrencyInstance(new Locale("vi", "VN")).format(amount);
     }
 }

@@ -2,25 +2,36 @@ package com.example.thaimongkieu_2123110013;
 
 public class User {
 
-        private String name;
-        private String phone;
-        private String address;
-        private String avatar;
+    public int id;
+    public String email;
+    public String username;
+    public String password;
+    public Name name;
+    public Address address;
+    public String phone;
 
-        public String getName() {
-            return name;
-        }
+    public static class Name {
+        public String firstname;
+        public String lastname;
+    }
 
-        public String getPhone() {
-            return phone;
-        }
+    public static class Address {
+        public String city;
+        public String street;
+        public int number;
+        public String zipcode;
+        public GeoLocation geolocation;
+    }
 
-        public String getAddress() {
-            return address;
-        }
+    public static class GeoLocation {
+        public String lat;
 
-        public String getAvatar() {
-            return avatar;
-        }
+        // Từ khóa 'long' là từ khóa trong Java → dùng tên khác như '_long'
+        @com.google.gson.annotations.SerializedName("long")
+        public String _long;
+    }
 
 }
+
+
+

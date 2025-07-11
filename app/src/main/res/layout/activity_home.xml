@@ -38,7 +38,6 @@
             android:orientation="vertical">
 
             <!-- Header -->
-            <!-- Header -->
             <LinearLayout
                 android:id="@+id/header"
                 android:layout_width="match_parent"
@@ -79,19 +78,39 @@
                         android:fontFamily="sans-serif-medium" />
                 </LinearLayout>
 
-                <!-- Bên phải: Nút giỏ hàng -->
-                <ImageView
-                    android:id="@+id/btnCart"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/add_cart"
-                    android:scaleType="centerInside"
-                    android:background="@drawable/bg_round_white"
-                    android:clipToOutline="true"
-                    android:outlineProvider="background"
-                    android:contentDescription="Giỏ hàng"
-                    android:padding="8dp"
-                    android:elevation="6dp" />
+                <!-- Bên phải: Giỏ hàng + số -->
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/btnCart"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/add_cart"
+                        android:scaleType="centerInside"
+                        android:background="@drawable/bg_round_white"
+                        android:clipToOutline="true"
+                        android:outlineProvider="background"
+                        android:contentDescription="Giỏ hàng"
+                        android:padding="8dp"
+                        android:elevation="6dp" />
+
+                    <TextView
+                        android:id="@+id/tvCartCount"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="end|top"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginEnd="2dp"
+                        android:background="@drawable/bg_round_red"
+                        android:text="0"
+                        android:textSize="10sp"
+                        android:textColor="#FFFFFF"
+                        android:gravity="center"
+                        android:visibility="gone" />
+                </FrameLayout>
+
             </LinearLayout>
 
 

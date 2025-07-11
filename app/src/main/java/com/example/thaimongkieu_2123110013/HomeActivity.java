@@ -18,8 +18,6 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,43 +31,32 @@ public class HomeActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private LinearLayout layoutCategoryRow;
+    private TextView tvCartCount;
+    private int cartCount = 0;
 
     String tutorials[] = {
-            "Tất cả",
-            "Truyện tranh",
-            "Trinh thám",
-            "Kỳ ảo",
-            "Văn học",
-            "Công nghệ"
+            "Tất cả", "Truyện tranh", "Trinh thám", "Kỳ ảo", "Văn học", "Công nghệ"
     };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState); // ✅ Đúng thứ tự
+        super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home);
 
+        tvCartCount = findViewById(R.id.tvCartCount);
+        ImageView btnCart = findViewById(R.id.btnCart);
         EditText etSearch = findViewById(R.id.etSearch);
         ImageView btnSearch = findViewById(R.id.btnSearch);
-
-        btnSearch.setOnClickListener(v -> {
-            String keyword = etSearch.getText().toString().trim();
-            if (!keyword.isEmpty()) {
-                searchProductByName(keyword);
-            } else {
-                loadAllProducts();
-            }
-        });
+        recyclerView = findViewById(R.id.recyclerProduct);
+        layoutCategoryRow = findViewById(R.id.layoutCategoryRow);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-        layoutCategoryRow = findViewById(R.id.layoutCategoryRow);
-        recyclerView = findViewById(R.id.recyclerProduct);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
         for (String item : tutorials) {
             TextView textView = (TextView) LayoutInflater.from(this)
@@ -88,50 +75,36 @@ public class HomeActivity extends AppCompatActivity {
             layoutCategoryRow.addView(textView);
         }
 
-        loadAllProducts();
+        btnSearch.setOnClickListener(v -> {
+            String keyword = etSearch.getText().toString().trim();
+            if (!keyword.isEmpty()) {
+                searchProductByName(keyword);
+            } else {
+                loadAllProducts();
+            }
+        });
 
-        ImageView btnCart = findViewById(R.id.btnCart);
         btnCart.setOnClickListener(v -> {
             Intent intent = new Intent(HomeActivity.this, CartActivity.class);
             startActivity(intent);
         });
 
-        TextView tvGreeting = findViewById(R.id.tvGreeting);
         ImageView avatar = findViewById(R.id.avatar);
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://686f0e0491e85fac429fa530.mockapi.io/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        ApiService api = retrofit.create(ApiService.class);
-
-        api.getUserInfo().enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    User user = response.body();
-
-                    // Hiển thị tên cuối (ví dụ: "Thái Mộng Kiều" -> "Kiều")
-                    String[] parts = user.getName().split(" ");
-                    String lastName = parts[parts.length - 1];
-                    tvGreeting.setText("Hi, " + lastName + "!");
-
-                    // Load avatar bằng Glide
-                    Glide.with(HomeActivity.this)
-                            .load(user.getAvatar())
-                            .placeholder(R.drawable.avatar)
-                            .into(avatar);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Toast.makeText(HomeActivity.this, "Lỗi tải user: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
+        avatar.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
+            startActivity(intent);
         });
 
+        loadAllProducts();
+    }
 
+    private void updateCartCount() {
+        if (cartCount > 0) {
+            tvCartCount.setVisibility(View.VISIBLE);
+            tvCartCount.setText(String.valueOf(cartCount));
+        } else {
+            tvCartCount.setVisibility(View.GONE);
+        }
     }
 
     private void highlightSelectedCategory(TextView selected) {
@@ -157,7 +130,11 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    ProductAdapter adapter = new ProductAdapter(HomeActivity.this, response.body());
+                    ProductAdapter adapter = new ProductAdapter(HomeActivity.this, response.body(), product -> {
+                        cartCount++;
+                        updateCartCount();
+                        Toast.makeText(HomeActivity.this, "Đã thêm \"" + product.getName() + "\" vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                    });
                     recyclerView.setAdapter(adapter);
                 } else {
                     Toast.makeText(HomeActivity.this, "Không có dữ liệu", Toast.LENGTH_SHORT).show();
@@ -183,7 +160,11 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    ProductAdapter adapter = new ProductAdapter(HomeActivity.this, response.body());
+                    ProductAdapter adapter = new ProductAdapter(HomeActivity.this, response.body(), product -> {
+                        cartCount++;
+                        updateCartCount();
+                        Toast.makeText(HomeActivity.this, "Đã thêm \"" + product.getName() + "\" vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                    });
                     recyclerView.setAdapter(adapter);
                 } else {
                     Toast.makeText(HomeActivity.this, "Không có sản phẩm phù hợp", Toast.LENGTH_SHORT).show();
@@ -198,8 +179,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void searchProductByName(String keyword) {
-        if (keyword == null) keyword = ""; // đảm bảo không null
-        String lowerKeyword = keyword.toLowerCase(); // dùng biến tạm
+        String lowerKeyword = keyword.toLowerCase();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://686f0e0491e85fac429fa530.mockapi.io/")
@@ -222,7 +202,11 @@ public class HomeActivity extends AppCompatActivity {
                     }
 
                     if (!filtered.isEmpty()) {
-                        recyclerView.setAdapter(new ProductAdapter(HomeActivity.this, filtered));
+                        recyclerView.setAdapter(new ProductAdapter(HomeActivity.this, filtered, product -> {
+                            cartCount++;
+                            updateCartCount();
+                            Toast.makeText(HomeActivity.this, "Đã thêm \"" + product.getName() + "\" vào giỏ hàng", Toast.LENGTH_SHORT).show();
+                        }));
                     } else {
                         Toast.makeText(HomeActivity.this, "Không tìm thấy sản phẩm", Toast.LENGTH_SHORT).show();
                     }
@@ -237,6 +221,4 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
-
 }
-

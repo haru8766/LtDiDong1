@@ -161,25 +161,18 @@
                 android:layout_marginTop="24dp" />
 
             <!-- RecyclerView sản phẩm liên quan -->
-            <TextView
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerRelated"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="khong co"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="#001243"
-                android:layout_marginTop="24dp" />
-<!--            <androidx.recyclerview.widget.RecyclerView-->
-<!--                android:id="@+id/recyclerRelated"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="8dp"-->
-<!--                android:paddingBottom="16dp"-->
-<!--                android:overScrollMode="never"-->
-<!--                android:scrollbars="none"-->
-<!--                android:clipToPadding="false"-->
-<!--                tools:listitem="@layout/item_product"-->
-<!--                android:orientation="horizontal" />-->
+                android:layout_marginTop="8dp"
+                android:paddingBottom="16dp"
+                android:overScrollMode="never"
+                android:scrollbars="none"
+                android:clipToPadding="false"
+                tools:listitem="@layout/item_product"
+                android:orientation="horizontal" />
+
 
         </LinearLayout>
 

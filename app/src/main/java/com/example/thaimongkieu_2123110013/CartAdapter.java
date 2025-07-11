@@ -1,130 +1,133 @@
 package com.example.thaimongkieu_2123110013;
 
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.CheckBox;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.HashMap;
+import com.bumptech.glide.Glide;
+
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
-//public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
+public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
+    private final List<Product> list;
+    private OnCartChangedListener cartChangedListener;
 
-//    private List<Product> productList;
-//    private SparseBooleanArray selectedStates = new SparseBooleanArray();
-//    private HashMap<Integer, Integer> quantityMap = new HashMap<>();
-//
-//    private OnItemCheckedChangeListener listener;
-//
-//    public interface OnItemCheckedChangeListener {
-//        void onItemCheckedChanged(int totalSelectedPrice);
-//    }
-//
-//    public void setOnItemCheckedChangeListener(OnItemCheckedChangeListener listener) {
-//        this.listener = listener;
-//    }
-//
-//    public CartAdapter(List<Product> productList) {
-//        this.productList = productList;
-//        // mặc định mỗi sản phẩm có số lượng = 1
-//        for (int i = 0; i < productList.size(); i++) {
-//            quantityMap.put(i, 1);
-//        }
-//    }
-//
-//    @NonNull
-//    @Override
-//    public CartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//        View view = LayoutInflater.from(parent.getContext())
-//                .inflate(R.layout.item_cart, parent, false);
-//        return new CartViewHolder(view);
-//    }
-//
-//    @Override
-//    public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
-//        Product product = productList.get(position);
-//
-//        holder.name.setText(product.name);
-//        holder.price.setText(product.newPrice);
-//        holder.image.setImageResource(product.imageResId);
-//
-//        // Lấy số lượng hiện tại từ map
-//        int quantity = quantityMap.get(position);
-//        holder.quantity.setText(String.valueOf(quantity));
-//
-//        // Checkbox
-//        holder.checkbox.setOnCheckedChangeListener(null);
-//        holder.checkbox.setChecked(selectedStates.get(position, false));
-//        holder.checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-//            selectedStates.put(position, isChecked);
-//            if (listener != null) {
-//                listener.onItemCheckedChanged(getTotalSelectedPrice());
-//            }
-//        });
-//
-//        // Tăng số lượng
-//        holder.btnIncrease.setOnClickListener(v -> {
-//            int current = quantityMap.get(position);
-//            quantityMap.put(position, current + 1);
-//            holder.quantity.setText(String.valueOf(current + 1));
-//            if (listener != null) {
-//                listener.onItemCheckedChanged(getTotalSelectedPrice());
-//            }
-//        });
-//
-//        // Giảm số lượng
-//        holder.btnDecrease.setOnClickListener(v -> {
-//            int current = quantityMap.get(position);
-//            if (current > 1) {
-//                quantityMap.put(position, current - 1);
-//                holder.quantity.setText(String.valueOf(current - 1));
-//                if (listener != null) {
-//                    listener.onItemCheckedChanged(getTotalSelectedPrice());
-//                }
-//            }
-//        });
-//    }
-//
-//    private int getTotalSelectedPrice() {
-//        int total = 0;
-//        for (int i = 0; i < productList.size(); i++) {
-//            if (selectedStates.get(i, false)) {
-//                String raw = productList.get(i).newPrice.replaceAll("[^0-9]", "");
-//                int price = raw.isEmpty() ? 0 : Integer.parseInt(raw);
-//                int quantity = quantityMap.get(i);
-//                total += price * quantity;
-//            }
-//        }
-//        return total;
-//    }
-//
-//    @Override
-//    public int getItemCount() {
-//        return productList.size();
-//    }
-//
-//    public static class CartViewHolder extends RecyclerView.ViewHolder {
-//        CheckBox checkbox;
-//        ImageView image;
-//        TextView name, price, quantity;
-//        Button btnIncrease, btnDecrease;
-//
-//        public CartViewHolder(@NonNull View itemView) {
-//            super(itemView);
-//            checkbox = itemView.findViewById(R.id.checkboxSelect);
-//            image = itemView.findViewById(R.id.imageProduct);
-//            name = itemView.findViewById(R.id.textProductName);
-//            price = itemView.findViewById(R.id.textPrice);
-//            quantity = itemView.findViewById(R.id.textQuantity);
-//            btnIncrease = itemView.findViewById(R.id.btnIncrease);
-//            btnDecrease = itemView.findViewById(R.id.btnDecrease);
-//        }
-//    }
-//}
+    public interface OnCartChangedListener {
+        void onCartUpdated(double total);
+        void onItemRemoved(Product removedItem);
+    }
+
+    public void setOnCartChangedListener(OnCartChangedListener listener) {
+        this.cartChangedListener = listener;
+    }
+
+    public CartAdapter(List<Product> list) {
+        this.list = list;
+    }
+
+    private String formatCurrency(double amount) {
+        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        return formatter.format(amount);
+    }
+
+    @NonNull
+    @Override
+    public CartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cart, parent, false);
+        return new CartViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
+        Product p = list.get(position);
+
+        holder.name.setText(p.getName());
+        holder.price.setText("Giá: " + formatCurrency(p.getDiscountPrice()));
+        holder.quantity.setText(String.valueOf(p.getQuantity()));
+
+        Glide.with(holder.itemView.getContext())
+                .load(p.getImageUrl())
+                .placeholder(R.drawable.p1)
+                .into(holder.image);
+
+        // Tăng số lượng
+        holder.btnIncrease.setOnClickListener(v -> {
+            p.setQuantity(p.getQuantity() + 1);
+            holder.quantity.setText(String.valueOf(p.getQuantity()));
+            notifyTotalChanged();
+        });
+
+        // Giảm số lượng
+        holder.btnDecrease.setOnClickListener(v -> {
+            if (p.getQuantity() > 1) {
+                p.setQuantity(p.getQuantity() - 1);
+                holder.quantity.setText(String.valueOf(p.getQuantity()));
+                notifyTotalChanged();
+            }
+        });
+
+        // Xoá sản phẩm
+        holder.btnDelete.setOnClickListener(v -> {
+            int pos = holder.getAdapterPosition();
+            Product removed = list.remove(pos);
+            notifyItemRemoved(pos);
+            notifyTotalChanged();
+            if (cartChangedListener != null) {
+                cartChangedListener.onItemRemoved(removed);
+            }
+            Toast.makeText(holder.itemView.getContext(), "Đã xoá " + p.getName(), Toast.LENGTH_SHORT).show();
+        });
+
+        // Checkbox chọn sản phẩm
+        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            p.setSelected(isChecked);
+            notifyTotalChanged();
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        return list.size();
+    }
+
+    private void notifyTotalChanged() {
+        if (cartChangedListener != null) {
+            double total = 0;
+            for (Product p : list) {
+                if (p.isSelected()) {
+                    total += p.getQuantity() * p.getDiscountPrice();
+                }
+            }
+            cartChangedListener.onCartUpdated(total);
+        }
+    }
+
+    static class CartViewHolder extends RecyclerView.ViewHolder {
+        ImageView image;
+        TextView name, price, quantity;
+        ImageButton btnIncrease, btnDecrease, btnDelete;
+        CheckBox checkBox;
+
+        public CartViewHolder(@NonNull View v) {
+            super(v);
+            image = v.findViewById(R.id.imageProduct);
+            name = v.findViewById(R.id.textProductName);
+            price = v.findViewById(R.id.textPrice);
+            quantity = v.findViewById(R.id.textQuantity);
+            btnIncrease = v.findViewById(R.id.btnIncrease);
+            btnDecrease = v.findViewById(R.id.btnDecrease);
+            btnDelete = v.findViewById(R.id.btnDelete);
+            checkBox = v.findViewById(R.id.checkboxSelect);
+        }
+    }
+}
