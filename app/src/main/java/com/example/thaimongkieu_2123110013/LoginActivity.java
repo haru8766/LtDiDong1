@@ -1,6 +1,7 @@
 package com.example.thaimongkieu_2123110013;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,6 +46,12 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin    = findViewById(R.id.btnLogin);
         btnRegister = findViewById(R.id.btnRegister);
 
+        // 👉 Tự động điền username nếu có từ RegisterActivity gửi sang
+        String usernameFromRegister = getIntent().getStringExtra("username");
+        if (usernameFromRegister != null) {
+            objUsername.setText(usernameFromRegister);
+        }
+
         btnLogin.setOnClickListener(v -> {
             String usernameInput = objUsername.getText().toString().trim();
             String passwordInput = objPassword.getText().toString().trim();
@@ -52,7 +59,19 @@ public class LoginActivity extends AppCompatActivity {
             if (usernameInput.isEmpty() || passwordInput.isEmpty()) {
                 Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin!", Toast.LENGTH_SHORT).show();
             } else {
-                loginWithApi(usernameInput, passwordInput);
+                // 👉 Ưu tiên kiểm tra thông tin đã đăng ký local
+                SharedPreferences pref = getSharedPreferences("UserData", MODE_PRIVATE);
+                String savedUsername = pref.getString("username", "");
+                String savedPassword = pref.getString("password", "");
+
+                if (usernameInput.equals(savedUsername) && passwordInput.equals(savedPassword)) {
+                    Toast.makeText(this, "Đăng nhập thành công (local)!", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                    finish();
+                } else {
+                    // Không đúng → gọi API
+                    loginWithApi(usernameInput, passwordInput);
+                }
             }
         });
 
@@ -76,7 +95,7 @@ public class LoginActivity extends AppCompatActivity {
                             String password = user.getString("password");
 
                             if (username.equals(usernameInput) && password.equals(passwordInput)) {
-                                Toast.makeText(this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, "Đăng nhập thành công (API)!", Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                                 finish();
                                 found = true;

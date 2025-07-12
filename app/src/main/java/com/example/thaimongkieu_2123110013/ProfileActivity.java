@@ -1,15 +1,14 @@
 package com.example.thaimongkieu_2123110013;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -21,24 +20,26 @@ public class ProfileActivity extends AppCompatActivity {
 
     private TextView tvName, tvUsername, tvEmail, tvPhone, tvAddress;
     private ImageView avatar;
+    private Button btnLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        // Ánh xạ
+        // Ánh xạ view
         avatar = findViewById(R.id.avatar);
         tvName = findViewById(R.id.tvName);
         tvUsername = findViewById(R.id.tvUsername);
         tvEmail = findViewById(R.id.tvEmail);
         tvPhone = findViewById(R.id.tvPhone);
         tvAddress = findViewById(R.id.tvAddress);
+        btnLogout = findViewById(R.id.btnLogout);
 
-        // Lấy userId từ login truyền qua (ví dụ là 1)
+        // Lấy userId truyền từ LoginActivity (nếu có)
         int userId = getIntent().getIntExtra("userId", 1);
 
-        // Retrofit
+        // Gọi API bằng Retrofit
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://fakestoreapi.com/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -48,7 +49,7 @@ public class ProfileActivity extends AppCompatActivity {
         api.getUserById(userId).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                if(response.isSuccessful() && response.body() != null) {
+                if (response.isSuccessful() && response.body() != null) {
                     User user = response.body();
                     tvName.setText("Tên: " + user.name.firstname + " " + user.name.lastname);
                     tvUsername.setText("Username: " + user.username);
@@ -62,6 +63,20 @@ public class ProfileActivity extends AppCompatActivity {
             public void onFailure(Call<User> call, Throwable t) {
                 Toast.makeText(ProfileActivity.this, "Lỗi khi tải thông tin", Toast.LENGTH_SHORT).show();
             }
+        });
+
+        // 👉 Xử lý Đăng xuất
+        btnLogout.setOnClickListener(v -> {
+            // Xoá SharedPreferences
+            SharedPreferences pref = getSharedPreferences("UserData", MODE_PRIVATE);
+            SharedPreferences.Editor editor = pref.edit();
+            editor.clear();
+            editor.apply();
+
+            // Quay về màn hình Login và xoá lịch sử backstack
+            Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         });
     }
 }

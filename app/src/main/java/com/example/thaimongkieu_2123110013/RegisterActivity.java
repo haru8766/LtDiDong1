@@ -31,7 +31,7 @@ public class RegisterActivity extends AppCompatActivity {
             return insets;
         });
 
-        // ánh xạ giao diện
+        // Ánh xạ view
         etUsername = findViewById(R.id.etUsername);
         etPhone    = findViewById(R.id.etPhone);
         etPassword = findViewById(R.id.etPassword);
@@ -49,35 +49,30 @@ public class RegisterActivity extends AppCompatActivity {
                 if (username.isEmpty() || phone.isEmpty() || password.isEmpty()) {
                     Toast.makeText(RegisterActivity.this, "Vui lòng điền đầy đủ thông tin!", Toast.LENGTH_SHORT).show();
                 } else {
-                    // ✅ Lưu thông tin người dùng vào SharedPreferences
+                    // ✅ Lưu thông tin vào SharedPreferences
                     SharedPreferences pref = getSharedPreferences("UserData", MODE_PRIVATE);
                     SharedPreferences.Editor editor = pref.edit();
+                    editor.putString("username", username); // <-- thêm username
                     editor.putString("phone", phone);
                     editor.putString("password", password);
                     editor.apply();
 
                     Toast.makeText(RegisterActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
 
-                    // Quay lại màn hình đăng nhập và tự điền số điện thoại
+                    // Quay lại màn hình đăng nhập và gửi username
                     Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                    intent.putExtra("phone", phone);
+                    intent.putExtra("username", username); // <-- truyền username để tự điền
                     startActivity(intent);
                     finish();
                 }
             }
         });
 
-
-
         // Xử lý nút Trở lại
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent it = new Intent(getApplicationContext(), LoginActivity.class );
-                startActivity(it);
-                finish();
-            }
+        btnBack.setOnClickListener(v -> {
+            Intent it = new Intent(RegisterActivity.this, LoginActivity.class);
+            startActivity(it);
+            finish();
         });
-
     }
 }

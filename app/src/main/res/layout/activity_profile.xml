@@ -90,6 +90,13 @@
                 android:text="Địa chỉ"
                 android:textColor="#87CEEB"
                 android:layout_marginBottom="8dp" />
+            <Button
+                android:id="@+id/btnLogout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#BFD7E8"
+                android:text="Đăng xuất" />
+
         </LinearLayout>
     </ScrollView>
 
